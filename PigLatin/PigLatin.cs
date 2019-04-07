@@ -52,6 +52,7 @@ namespace PigLatin
         else {
             pigWord = pigWord + "yay";
         }
+        
         Console.WriteLine(pigWord);
         }
     }
