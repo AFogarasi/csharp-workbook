@@ -9,6 +9,7 @@ namespace PigLatin
             // your code goes here
 
             // leave this command at the end so your program does not close automatically
+            Console.WriteLine("What is your name?");
             Console.ReadLine();
         }
         
