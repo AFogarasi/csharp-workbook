@@ -34,7 +34,7 @@ namespace PigLatin
              letterIdx = 0;
         }
 
-    //  Assign beginning of new Pigword to a variable, assign letters before first vowel to a different variable, and joing them.
+    //  Assign beginning of new Pigword to a variable, assign letters before first vowel to a different variable, and join them.
         string pigWord = englishWord.Substring(letterIdx); 
         string firstHalf = englishWord.Substring(0,letterIdx);
         pigWord = pigWord + firstHalf;
