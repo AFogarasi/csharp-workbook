@@ -106,18 +106,18 @@ namespace HelloWorld
         Console.WriteLine("Quotient: " + quo);   
 
     //1. Ask a user for a number 
-        Console.WriteLine("Enter a number, either positive or negative: ");
+        Console.WriteLine("Enter a whole and non-decimal number, either positive or negative: ");
         string numberSign = Console.ReadLine();
         int Sign = int.Parse(numberSign);
 
-  //1. Return if number is positive or negative
-        if (Sign < 0) {
-            Console.WriteLine("Number is negative");
+    //2. Return if number is positive or negative
+        if (Sign >= 0) {
+            Console.WriteLine("Number is positive");
         }
         else {
-            Console.WriteLine("Number is positive");  
+            Console.WriteLine("Number is negative");  
         } 
-        
+
         }   
     }
 }
