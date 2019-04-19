@@ -4,7 +4,7 @@ namespace TicTacToe
 {
     class Program
     {
-        public static string playerTurn = "X";
+        public static string playerTurn = "O";
         public static string[][] board = new string[][]
         {
             new string[] {" ", " ", " "},
@@ -16,62 +16,130 @@ namespace TicTacToe
         {
             do
             {
-                DrawBoard();
-                GetInput();
-
+            DrawBoard(); 
+            playerTurn = (playerTurn == "X") ? "O" : "X";
+            GetInput();
             } while (!CheckForWin() && !CheckForTie());
+            Console.WriteLine("Game Over!");
 
-            // leave this command at the end so your program does not close automatically
+        // leave this command at the end so it does not close automatically
             Console.ReadLine();
         }
 
         public static void GetInput()
         {
+        // Ask player to enter "row" and "collumn" coordinates to place their "X" or "O" on a spot
+        // Collect the values of the row and collumn (spot) and assign them to variables
             Console.WriteLine("Player " + playerTurn);
             Console.WriteLine("Enter Row:");
             int row = int.Parse(Console.ReadLine());
             Console.WriteLine("Enter Column:");
             int column = int.Parse(Console.ReadLine());
+        // Check to see if spot is open. If not open, choose another. Otherwise put the mark in the spot.
+        // If a new mark is placed in a spot, switch the player...X -> O, or O -> X after the mark is placed.
+            if (board[row][column] == "X" || board[row][column] == "O"){
+                Console.WriteLine("That square is already taken. Choose another:");
+                playerTurn = (playerTurn == "X") ? "O" : "X";
+            }
+            else {PlaceMark (row, column); 
+            }
         }
 
         public static void PlaceMark(int row, int column)
         {
-        // your code goes here
+        // place the playerTurn mark onto correct place on the board 
+            board[row][column] = playerTurn;
         }
 
         public static bool CheckForWin()
         {
-            // your code goes here
+        // check the three posible win methods: horizantal, vertical and diagnal for a win
 
-            return false;
+            bool anyWin = false;
+            anyWin = (HorizontalWin() == true || VerticalWin() == true || DiagonalWin() == true);
+            return anyWin;
         }
 
         public static bool CheckForTie()
         {
-            // your code goes here
+        // check to see if any spot is still open in any row
+        // if there is still an open spot game continues
+ 
+            string blank = " ";
+            bool openOne      = false;
+            bool openTwo      = false;
+            bool openThree    = false;
+            bool openSpot     = false;
+            openOne          = (board[0][0] != blank && board[0][1] != blank && board[0][2] != blank);
+            openTwo          = (board[1][0] != blank && board[1][1] != blank && board[1][2] != blank);
+            openThree        = (board[2][0] != blank && board[2][1] != blank && board[2][2] != blank);
+            openSpot         = (openOne == true && openTwo == true && openThree && true);
 
-            return false;
+            if (openSpot == true) {
+                Console.WriteLine("You tied. Try again");
+            }
+            return openSpot;
         }
         
         public static bool HorizontalWin()
         {
-        // your code goes here
+        // check all three array rows for a win
+        // do the three index postitions in row1 have the same variable > if yes = win. repeat for row 2 and 3
 
-        return false;
+            bool rowOne         = false;
+            bool rowTwo         = false;
+            bool rowThree       = false;
+            bool winHorizantal  = false;
+            rowOne          = (board[0][0] == playerTurn && board[0][1] == playerTurn && board[0][2] == playerTurn);
+            rowTwo          = (board[1][0] == playerTurn && board[1][1] == playerTurn && board[1][2] == playerTurn);
+            rowThree        = (board[2][0] == playerTurn && board[2][1] == playerTurn && board[2][2] == playerTurn);
+            winHorizantal   = (rowOne == true || rowTwo == true || rowThree == true);
+
+            if (winHorizantal == true) {
+                DrawBoard();
+                Console.WriteLine("Player " +playerTurn +" Wins!");
+            }
+            return winHorizantal;
         }
 
         public static bool VerticalWin()
         {
-            // your code goes here
+        // check all three array columns for a win
+        // do the three index postitions in column1 have the same variable > if yes = win. repeat for column 2 column 3
 
-            return false;
+            bool columnOne     = false;
+            bool columnTwo     = false;
+            bool columnThree   = false;
+            bool winVertical   = false;
+            columnOne      = (board[0][0] == playerTurn && board[1][0] == playerTurn && board[2][0] == playerTurn);
+            columnTwo      = (board[0][1] == playerTurn && board[1][1] == playerTurn && board[2][1] == playerTurn);
+            columnThree    = (board[0][2] == playerTurn && board[1][2] == playerTurn && board[2][2] == playerTurn);
+            winVertical    = (columnOne == true || columnTwo == true || columnThree == true);
+
+            if (winVertical == true) {
+                DrawBoard();
+                Console.WriteLine("Player " +playerTurn +" Wins!");
+            }
+            return winVertical;
         }
 
         public static bool DiagonalWin()
         {
-            // your code goes here
+        // check diagnal paths for a win
+        // do the three index postitions in rightDown have the same variable > if yes = win. repeat leftDown
 
-            return false;
+            bool rightDown     = false;
+            bool leftDown      = false;
+            bool winDiagnal    = false;
+            rightDown      = (board[0][0] == playerTurn && board[1][1] == playerTurn && board[2][2] == playerTurn);
+            leftDown       = (board[0][2] == playerTurn && board[1][1] == playerTurn && board[2][0] == playerTurn);
+            winDiagnal     = (rightDown == true || leftDown == true);
+
+            if (winDiagnal == true) {
+                DrawBoard();
+                Console.WriteLine("Player " +playerTurn +" Wins!");
+            }
+            return winDiagnal;
         }
 
         public static void DrawBoard()
