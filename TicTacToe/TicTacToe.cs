@@ -96,6 +96,7 @@ namespace TicTacToe
             winHorizantal   = (rowOne == true || rowTwo == true || rowThree == true);
 
             if (winHorizantal == true) {
+                DrawBoard();
                 Console.WriteLine("Player " +playerTurn +" Wins!");
             }
             return winHorizantal;
@@ -116,6 +117,7 @@ namespace TicTacToe
             winVertical    = (columnOne == true || columnTwo == true || columnThree == true);
 
             if (winVertical == true) {
+                DrawBoard();
                 Console.WriteLine("Player " +playerTurn +" Wins!");
             }
             return winVertical;
@@ -134,6 +136,7 @@ namespace TicTacToe
             winDiagnal     = (rightDown == true || leftDown == true);
 
             if (winDiagnal == true) {
+                DrawBoard();
                 Console.WriteLine("Player " +playerTurn +" Wins!");
             }
             return winDiagnal;
