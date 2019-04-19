@@ -22,7 +22,7 @@ namespace TicTacToe
             } while (!CheckForWin() && !CheckForTie());
             Console.WriteLine("Game Over!");
 
-        // leave this command at the end so your program does not close automatically
+        // leave this command at the end so it does not close automatically
             Console.ReadLine();
         }
 
