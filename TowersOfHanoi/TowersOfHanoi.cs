@@ -7,118 +7,177 @@ namespace TowersOfHanoi
     class Program
     {
         static void Main(string[] args)
-        {
-
-        // creates the block objects using the Block Class
-        Block red = new Block("Red",4);
-        Block white = new Block("White",3);
-        Block blue = new Block("Blue",2);
-        Block green = new Block("Green",1);
-
-                        // test - did block objects get created
-                        Console.WriteLine(red); 
-                        Console.WriteLine(white); 
-                        Console.WriteLine(blue); 
-                        Console.WriteLine(green); 
-
-        //creates the stack objects using Tower Class (Tower tower = new Tower(newStack))
-        Tower Stack1 = new Tower(new Stack<Block>());   
-        Stack1.blocks.Push(red);
-        Stack1.blocks.Push(white);
-        Stack1.blocks.Push(blue);
-        Stack1.blocks.Push(green); 
-        
-                        // test - did initial block objects get "pushed" into stack
-                        foreach( object obj in Stack1.blocks )
-                        {
-                            Console.WriteLine("Stack1 " +obj.ToString());
-                        }
-                            Console.WriteLine("Count " +(Stack1.blocks.Count));
-
-            // Pop off and Push on - needs to get moved to Method in "Game" Class
-            // May need to seperate into 2 Methods; a Pop Method and a Push Method
-            int count = (Stack1.blocks.Count);           
-            Tower Stack2 = new Tower(new Stack<Block>());
-            for (int i=0; i < count; i++)
-            {
-                Block j = Stack1.blocks.Pop();
-                Stack2.blocks.Push(j);
-            }
-
-                        // test - did Pop off and Push on to Stack2 work
-                        foreach( object obj in Stack2.blocks )
-                        {
-                            Console.WriteLine("Stack2 " +obj.ToString());
-                        }
-
-        //creates the dictionary objects (Towers) using Game Class (Game towers = new Game())
-        Game towers = new Game();
-    
-        towers.Add("TowerA", new string[] {"red", "blue", "orange"});
-        towers.Add("TowerB", new string[] {"blue", "red", "green"});
-        towers.Add("TowerC", new string[] {"green", "white", "blue"});
-		
-            foreach (var key in towers.Keys)
-            {
-                Console.WriteLine("Key: " + key);
-                foreach (var blockStack in towers[key])
-                {
-                    Console.WriteLine(blockStack);
-                }
-                Console.WriteLine("");
-            }
+        {     
+        Game game = new Game();
+        game.Run();
             
         }
     }
-
+// Game class
     public class Game
     {
-        public Dictionary <string, string[]> towers;
+        // Field defines a Dictionary called towers (variable) with a string (key) and a (tower) value
+        public Dictionary<string, Tower> tDictionary;
 
-        public Game (Dictionary <string, string[]> initialTowers)
+        //Constructor - when called it creates an instance of a Dictionary called "towers"
+        public Game()
         {
-            this.towers = initialTowers;
-        }      
+        // Method call - creates an empty dictionary called "this.towers" with a string (key) and a Tower object (value)
+            this.tDictionary = new Dictionary<string, Tower>();  
+
+        // creates 4 Block objects using the "Block" class and populates them with unique weights
+            Block red = new Block(4);
+            Block white = new Block(3);
+            Block blue = new Block(2);
+            Block green = new Block(1);   
+
+        // creates 3 unique Tower objects (A, B, C) defined by the "Tower" class each with an empty Stack of empty Block objects
+            Tower A = new Tower();
+            Tower B = new Tower();
+            Tower C = new Tower();
+
+        // populates TowerA.blocks (blocks = Stack containing a Block object) using Push, one at a time with named "Block"s
+            A.blocks.Push(red);
+            A.blocks.Push(white);                              
+            A.blocks.Push(blue);
+            A.blocks.Push(green);
+
+        // Method call - uses the "this.towers" instance variable (Dictionary) and adds (Add) a Key (string) and value (TowerA and B and C) one at a time
+            this.tDictionary.Add("A",A);
+            this.tDictionary.Add("B",B);
+            this.tDictionary.Add("C",C);
+        } 
+
+        public void Run()
+        {
+        Console.WriteLine("Play Towers of Hanoi");
+        // User Input Method
+        // Ask user to input "From" Tower and "To" Tower
+        // Write to screen the player's choice  
+        string playGame = "Y";
+            while (playGame == "Y")
+            {
+                printBoard();
+     
+                // Error handling using try if something other than string values "A", "B" or "C" are entered    
+                try 
+                {
+                    Console.WriteLine("Choose the SOURCE Tower (A, B or C): "); 
+                    string from = (Console.ReadLine().ToUpper());
+                    Console.WriteLine("SOURCE Tower is Tower: " + from);
+                    Tower From = this.tDictionary[from];
+
+                    Console.WriteLine("Choose the To Tower: "); 
+                    string to = (Console.ReadLine().ToUpper());
+                    Console.WriteLine("DESTINATION Tower is Tower: " + to);
+                    Tower To = this.tDictionary[to];
+
+                    if (IsLegal(From, To))
+                    {
+                        Move(From, To);
+                    }
+                }
+                   
+                // catch point in case of a bad user entry
+                catch (Exception e)
+                {
+                    Console.WriteLine(e.Message);
+                }
+
+                printBoard();
+                int ctB = this.tDictionary["B"].blocks.Count;
+                int ctC = this.tDictionary["C"].blocks.Count;
+                if (ctB == 4 || ctC ==4)
+                {
+                    Console.WriteLine("You Win!");
+                    playGame = "end";
+                }
+                else 
+                {Console.WriteLine("Try Another? \"Y\" = yes, any other choice to exit: "); 
+                playGame = Console.ReadLine().ToUpper();
+                }
+            }
+            Console.ReadLine(); 
+        }
+        public void printBoard()
+        {
+            // iterates through each key in the this.towers Dictionary
+            foreach (string key in this.tDictionary.Keys)
+            {
+                // writes each key
+                Console.Write(key+":");
+                // creates the variable "blockStack" according to Tower Class - a Stack of a Block
+                // this.towers[key] is the Tower (Stack of Block) paired to the instance key
+                Tower blockStack = this.tDictionary[key];
+                string blockstring = "";    
+
+                // iterates through each Block in blockStack
+                // PREpends each weight integer to the string variable x with a space between
+                foreach (Block i in blockStack.blocks)
+                {       
+                    blockstring = i.weight + " " + blockstring;
+                }
+             // writes out the string variable x   
+             Console.WriteLine(blockstring);
+            }   
+        }  
+        public bool IsLegal(Tower From, Tower To)
+        {
+            if (From.blocks.Count == 0)
+                {
+                    Console.WriteLine("No move. Nothing in Start Tower ");
+                    return false;
+                }
+
+            else if (To.blocks.Count == 0)
+                {
+                    return true;
+                }
+
+            else if (To.blocks.Count > 0)
+                {
+                int E = To.blocks.Peek().weight;
+                int S = From.blocks.Peek().weight;
+                    if (S > E)
+                    {
+                        Console.WriteLine("Move Not Accepted. Big block over small block is not allowed"); 
+                        return false;
+                    }
+                }
+                return true;
+        }
+        public void Move(Tower start, Tower end)
+        {          
+            // this method should move the top block from the source tower to the destination tower
+            Block j = start.blocks.Pop();
+            end.blocks.Push(j);
+        }
     } 
     
+    // Tower class creates a Stack containing an empty "Block" object 
     public class Tower
     {
+        // Field defines a Stack called blocks (variable) with an empty Block
         public Stack<Block> blocks;
 
-        //Instance Variable: creates a name for each instance of tower
-        public Tower (Stack<Block> initialBlocks)
+        //Constructor - when called it creates an instance of a Stack with a Block
+        public Tower()
         {
-            this.blocks = initialBlocks;
-        }
-     
-        // Method - Using Override allows returns the object instance rather than the "qualified name", ToString converts the object to a string
-        override public String ToString()
-        {
-            String blockGroup = String.Format("{0}", this.blocks);
-            return blockGroup;
+            this.blocks = new Stack<Block>();
         }
     }
 
+    // Block class creates a "Block" object made up of a string (color) and an integer (weight)
     public class Block
     {
         //Instance Variable: creates an integer of weight that is unique to each instance
-        public string color {get; private set;}
+
         public int weight {get; private set;}
 
-        // Constructor creates an instance of a Block with and sets the assigns the instance variable to this instance
-        public Block (string initialColor, int initialWeight) 
+        // Constructor - when called it creates an instance of a Block 
+        public Block(int initialWeight) 
         {
-            this.color = initialColor;
             this.weight = initialWeight;
         }
-
-        // Method - Using Override allows returns the object instance rather than the "qualified name", ToString converts the object to a string
-        override public String ToString()
-        {
-            String block = String.Format("{0} {1}", this.color, this.weight);
-            return block;
-        }
-
     }
-
 }
