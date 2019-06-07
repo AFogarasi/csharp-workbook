@@ -1,11 +1,10 @@
 ﻿using System;
-using System.Linq;
-using System.Collections;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
 namespace ToDo
 {
+    // Starting point for To Do Application
     class Program
     {
         static void Main(string[] args)
@@ -15,6 +14,7 @@ namespace ToDo
         }
     }
 
+    // Utilities Class - contains all Read and Write functions
     public class Utils
     {
         public void printMenu()
@@ -72,6 +72,7 @@ namespace ToDo
 
     }
 
+    // Application Class - All direction and communication methods
     public class App
     {
         Dao dao;
@@ -84,7 +85,6 @@ namespace ToDo
             dao = new Dao();
             newUtil = new Utils();      
         }
-
 
         public void addItem()
         {
@@ -125,7 +125,7 @@ namespace ToDo
         return end;
         } 
 
-
+        // Start Method - contains all user interaction choices and error handling
         public void start()
         {
             do
@@ -170,11 +170,12 @@ namespace ToDo
         }
     }
 
+    // Item Class - defines the variables and database table categories
     public class Item
     {
         public int id {get; private set;}
         public String item {get; private set;}
-        public Type status {get; private set;}
+        public Type status {get; set;}
 
         public Item()
         {
@@ -193,6 +194,8 @@ namespace ToDo
         pending, done
     }
 
+    // Data Access Object Class (Dao) - creates the database and variables used to pass data to and from the database
+    // Dao also contains the methods used to make changes to the database
     public class Dao
     {
         private ItemsContext context;
@@ -240,17 +243,19 @@ namespace ToDo
                 {
                     if(todo.status == Type.pending)
                     {
-                        Console.WriteLine(todo.status);
-                        // context.items.todo.status = Type.done;
-
-                    }     
+                        todo.status = Type.done;
+                    } 
+                    else
+                    {
+                        todo.status = Type.pending; 
+                    }    
                 }
-            // context.SaveChanges();
+            context.SaveChanges();
             }
         }
-    
     }
 
+    // ItemsContext Class is the inheratance connoction to the database
     public class ItemsContext : DbContext
     {
         public DbSet<Item> items { get; private set;}
