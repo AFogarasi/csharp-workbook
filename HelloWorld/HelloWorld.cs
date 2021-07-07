@@ -103,7 +103,21 @@ namespace HelloWorld
         Console.WriteLine("Sum: " + sum);
         Console.WriteLine("Product: " + prod);
         Console.WriteLine("Difference: " + dif);
-        Console.WriteLine("Quotient: " + quo);       
+        Console.WriteLine("Quotient: " + quo);   
+
+    //1. Ask a user for a number 
+        Console.WriteLine("Enter a whole and non-decimal number, either positive or negative: ");
+        string numberSign = Console.ReadLine();
+        int Sign = int.Parse(numberSign);
+
+    //2. Return if number is positive or negative
+        if (Sign >= 0) {
+            Console.WriteLine("Number is positive");
+        }
+        else {
+            Console.WriteLine("Number is negative");  
+        } 
+
         }   
     }
 }
